@@ -1,0 +1,17 @@
+{
+  "name": "client",
+  "version": "0.0.0",
+  "description": "battleships - dnode client",
+  "main": "dnodeClient.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "gitHead": "82c56a2709392ea5049151f285c6da50502e4e9e",
+  "dependencies": {
+    "dnode": "~1.0.5"
+  }
+}
