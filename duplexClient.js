@@ -1,16 +1,20 @@
-var reconnect = require('reconnect');
-var duplexEmitter = require('duplex-emitter');
+var reconnect = require('reconnect'), // modules
+	duplexEmitter = require('duplex-emitter');
 
-var port = 20000;
-var host = 'localhost';
+var host = 'localhost', // connection settings
+	port = 20000;
 
-var myMove = {x: 0, y: 0};
-var myUser = process.argv.pop();
-var gameId = '';
-var regData = {};
+var myMove = {x: 0, y: 0}, // defaults
+	myUser = process.argv.pop(),
+	gameId = '',
+	regData = {};
 
-var gamesPlayed = 0;
-var gamesWon = 0;
+
+var gridSize = 4, // to build a random grid
+	totalMarkers = 4;
+
+var gamesPlayed = 0, // stats
+	gamesWon = 0;
 
 var reconnector = reconnect(function(stream) {
   var peer = duplexEmitter(stream);
@@ -64,55 +68,28 @@ var reconnector = reconnect(function(stream) {
 
 
 function getBoard() {
-	var boards = [
-		[
-			[1 , 0 , 0, 0],
-			[0 , 1 , 0, 0],
-			[0 , 0 , 1, 0],
-			[0 , 1 , 0, 0]
-		],
-		[
-			[0 , 0 , 0, 1],
-			[0 , 0 , 0, 0],
-			[0 , 1 , 0, 1],
-			[0 , 1 , 0, 0]
-		],
-		[
-			[0 , 0 , 0, 1],
-			[0 , 1 , 0, 0],
-			[0 , 0 , 1, 0],
-			[0 , 1 , 0, 0]
-		],
-		[
-			[0 , 0 , 0, 1],
-			[0 , 0 , 0, 1],
-			[0 , 0 , 0, 1],
-			[0 , 0 , 0, 1]
-		],
-		[
-			[1 , 1 , 1, 1],
-			[0 , 0 , 0, 0],
-			[0 , 0 , 0, 0],
-			[0 , 0 , 0, 0]
-		],
-		[
-			[0 , 0 , 0, 1],
-			[0 , 1 , 1, 0],
-			[0 , 0 , 0, 0],
-			[0 , 1 , 0, 0]
-		],
-		[
-			[0 , 0 , 0, 0],
-			[0 , 1 , 1, 0],
-			[0 , 1 , 0, 0],
-			[0 , 1 , 0, 0]
-		],
-		[
-			[0 , 0 , 0, 1],
-			[1 , 1 , 1, 0],
-			[0 , 0 , 0, 0],
-			[0 , 0 , 0, 0]
-		]
-	];
-	return boards[Math.floor(Math.random()*boards.length)];
+	var board = [],
+		currentMarker = 0;
+
+	// build empty board
+	for(var x = 0; x < gridSize; x++) {
+		board[x] = [];
+		for(var y = 0; y < gridSize; y++) {
+			board[x][y] = 0;
+		}
+	}
+
+	// add points at random places
+
+	while(currentMarker < totalMarkers) {
+		var x = Math.floor(Math.random()*gridSize),
+			y = Math.floor(Math.random()*gridSize);
+
+		if(!board[x][y]) { // only put new markers where existing blocks are empty
+			board[x][y] = 1;
+			currentMarker++;
+		}
+	}
+
+	return board;
 }
