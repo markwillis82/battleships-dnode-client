@@ -97,11 +97,11 @@ function getBoard() {
 	// add points at random places
 
 	while(currentMarker < totalMarkers) {
-		var x = Math.floor(Math.random()*gridSize),
-			y = Math.floor(Math.random()*gridSize);
+		var mx = Math.floor(Math.random()*gridSize),
+			my = Math.floor(Math.random()*gridSize);
 
-		if(!board[x][y]) { // only put new markers where existing blocks are empty
-			board[x][y] = 1;
+		if(!board[mx][my]) { // only put new markers where existing blocks are empty
+			board[mx][my] = 1;
 			currentMarker++;
 		}
 	}
