@@ -33,7 +33,7 @@ var reconnector = reconnect(function(stream) {
 
 	peer.on('endGame', function(win) {
 		console.log('game Over: ', win);
-		if(win.winner == myUser) gamesWon++;
+		if(win.winner) gamesWon++;
 		gamesPlayed++;
 		if(gamesPlayed == 10) {
 			console.log('Finished playing. Total Wins: ', gamesWon);
