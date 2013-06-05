@@ -31,7 +31,13 @@ var reconnector = reconnect(function(stream) {
 		displayBoard = regData.board;
 		peer.emit('startGame', regData);
 	}
+
 	startGame();
+
+	peer.on('err', function(err, msg) {
+		console.log(err, msg);
+		process.exit();
+	});
 
 	peer.on('gameStart', function(data) {
 		console.log('game Start: ', data);
