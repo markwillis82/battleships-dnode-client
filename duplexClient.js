@@ -9,12 +9,14 @@ var myMove = {x: 0, y: 0}, // defaults
 	gameId = '',
 	regData = {};
 
+var displayBoard = [];
 
-var gridSize = 4, // to build a random grid
-	totalMarkers = 4;
+var gridSize = 10, // to build a random grid
+	totalMarkers = 10;
 
 var gamesPlayed = 0, // stats
-	gamesWon = 0;
+	gamesWon = 0,
+	gamesToPlay = 1;
 
 var reconnector = reconnect(function(stream) {
   var peer = duplexEmitter(stream);
@@ -26,6 +28,7 @@ var reconnector = reconnect(function(stream) {
 			board: getBoard()
 		};
 		myMove = {x: 0, y: 0};
+		displayBoard = regData.board;
 		peer.emit('startGame', regData);
 	}
 	startGame();
@@ -39,7 +42,7 @@ var reconnector = reconnect(function(stream) {
 		console.log('game Over: ', win);
 		if(win.winner) gamesWon++;
 		gamesPlayed++;
-		if(gamesPlayed == 10) {
+		if(gamesPlayed == gamesToPlay) {
 			console.log('Finished playing. Total Wins: ', gamesWon);
 			process.exit();
 		}
@@ -48,15 +51,21 @@ var reconnector = reconnect(function(stream) {
 
 	peer.on('gotMove', function(moveData) {
 		if(moveData.username == regData.username) {
-			console.log('received My Move: ', moveData);
+			// console.log('received My Move: ', moveData);
+			displayBoard[moveData.pos.x][moveData.pos.y] += 's';
 		} else {
-			console.log('received Move: ', moveData);
+			displayBoard[moveData.pos.x][moveData.pos.y] += (moveData.hit ? 'h' : 'm');
+
+			// console.log('received Move: ', moveData);
+
 			myMove.x++;
-			if(myMove.x >= 4) { // just iterate board
+			if(myMove.x >= gridSize) { // just iterate board
 				myMove.x = 0;
 				myMove.y++;
 			}
-			if(myMove.y >= 4) process.exit();
+			if(myMove.y >= gridSize) process.exit();
+
+			console.log(displayBoard);
 		}
 	});
 
