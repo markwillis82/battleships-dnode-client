@@ -1,5 +1,6 @@
 var reconnect = require('reconnect'), // modules
-	duplexEmitter = require('duplex-emitter');
+	duplexEmitter = require('duplex-emitter'),
+	charmBoard = require('./libs/charmDraw');
 
 var host = 'localhost', // connection settings
 	port = 20000;
@@ -16,7 +17,7 @@ var gridSize = 10, // to build a random grid
 
 var gamesPlayed = 0, // stats
 	gamesWon = 0,
-	gamesToPlay = 1;
+	gamesToPlay = 5;
 
 var reconnector = reconnect(function(stream) {
   var peer = duplexEmitter(stream);
@@ -42,6 +43,7 @@ var reconnector = reconnect(function(stream) {
 	peer.on('gameStart', function(data) {
 		console.log('game Start: ', data);
 		gameId = data.gameId;
+		charmBoard.reset();
 	});
 
 	peer.on('endGame', function(win) {
@@ -71,8 +73,9 @@ var reconnector = reconnect(function(stream) {
 			}
 			if(myMove.y >= gridSize) process.exit();
 
-			console.log(displayBoard);
+			// console.log(displayBoard);
 		}
+		charmBoard.drawBoard(displayBoard);
 	});
 
 	peer.on('myMove', function() {
