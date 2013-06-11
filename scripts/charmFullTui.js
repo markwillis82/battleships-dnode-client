@@ -67,7 +67,7 @@ setInterval(function() {
 			charm.foreground('white').write(/*' . '*/ ' ' + (testBoardA[x][y] ? testBoardA[x][y] : '.')); // draw result
 		}
 
-		charm.foreground('red').write(' |\t\t\t    |'); // draw right wall
+		charm.foreground('red').write(' |\t\t\t\t|'); // draw right wall
 
 
 		for (var y = 0; y < gridSize; y++) {
