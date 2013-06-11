@@ -10,7 +10,8 @@ var myMove = {x: 0, y: 0}, // defaults
 	gameId = '',
 	regData = {};
 
-var displayBoard = [];
+var displayBoardA = [],
+	displayBoardB = [];
 
 var gridSize = 10, // to build a random grid
 	totalMarkers = 10;
@@ -26,10 +27,11 @@ var reconnector = reconnect(function(stream) {
 	function startGame() { // start a new game
 		regData = {
 			username: myUser,
-			board: getBoard()
+			board: getBoard(true)
 		};
 		myMove = {x: 0, y: 0};
-		displayBoard = regData.board;
+		displayBoardA = regData.board;
+		displayBoardB = getBoard(false);
 		peer.emit('startGame', regData);
 	}
 
@@ -60,9 +62,9 @@ var reconnector = reconnect(function(stream) {
 	peer.on('gotMove', function(moveData) {
 		if(moveData.username == regData.username) {
 			// console.log('received My Move: ', moveData);
-			displayBoard[moveData.pos.x][moveData.pos.y] += 's';
+			displayBoardA[moveData.pos.x][moveData.pos.y] += 's';
 		} else {
-			displayBoard[moveData.pos.x][moveData.pos.y] += (moveData.hit ? 'h' : 'm');
+			displayBoardB[moveData.pos.x][moveData.pos.y] += (moveData.hit ? 'h' : 'm');
 
 			// console.log('received Move: ', moveData);
 
@@ -75,7 +77,7 @@ var reconnector = reconnect(function(stream) {
 
 			// console.log(displayBoard);
 		}
-		charmBoard.drawBoard(displayBoard);
+		charmBoard.drawBoard(displayBoardA, displayBoardB);
 	});
 
 	peer.on('myMove', function() {
@@ -85,7 +87,7 @@ var reconnector = reconnect(function(stream) {
 }).connect(port, host);
 
 
-function getBoard() {
+function getBoard(populate) {
 	var board = [],
 		currentMarker = 0;
 
@@ -104,7 +106,7 @@ function getBoard() {
 			my = Math.floor(Math.random()*gridSize);
 
 		if(!board[mx][my]) { // only put new markers where existing blocks are empty
-			board[mx][my] = 1;
+			if(populate) board[mx][my] = 1;
 			currentMarker++;
 		}
 	}
